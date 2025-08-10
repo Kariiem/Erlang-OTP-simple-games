@@ -9,10 +9,12 @@
 -export([play/0]).
 
 start_link() ->
-    gen_server:start_link({local, game}, game, [], [{debug, [trace, {log_to_file, "debug.log"}]}]).
+    DEBUG = [{debug, [trace, {log_to_file, "debug.log"}]}],
+    gen_server:start_link({local, game}, game, [], []).
 
 init(_Arg) ->
-    Target = rand:uniform(100),  % Random number 1-100
+    %% Target = rand:uniform(100),  % Random number 1-100
+    Target = 10,  % Random number 1-100
     State = #{target => Target, guesses => 0},
     {ok, State}.
 
@@ -25,13 +27,10 @@ handle_call({guess, Guess}, _From, State = #{target := Target, guesses := Count}
     NewState = State#{guesses => NewCount},
     if
         Guess == Target ->
-            io:format("Correct! You won in ~p guesses!~n", [NewCount]),
             {reply, {correct, NewCount}, NewState};
         Guess < Target ->
-            io:format("server: Too low! Attempt[~p]~n", [NewCount]),
             {reply, {too_low, NewCount}, NewState};
         true ->
-            io:format("server: Too high! Try ~p~n", [NewCount]),
             {reply, {too_high, NewCount}, NewState}
     end.
 
@@ -40,31 +39,17 @@ handle_cast(_Req, State) ->
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 play() ->
-    case io:fread("Guess a number (1-100): ", "~d") of
-        {ok, [Num]} ->
-            case game:guess(Num) of
-                {correct, Count} ->
-                    io:format("You won in ~p guesses!~n", [Count]),
-                    ask_play_again();
-                {too_low, _} ->
-                    io:format("client: Too low!~n"),
-                    play();
-                {too_high, _} ->
-                    io:format("client: Too high!~n"),
-                    play()
-            end;
-        {error, _} ->
-            io:format("Please enter a valid number~n"),
-            play()
-    end.
-
-ask_play_again() ->
-    case io:fread("Play again? (y/n): ", "~s") of
-        {ok, ["y"]} ->
-            game:new_game(),
+    Num = io_server:read(),
+    case guess(Num) of
+        {correct, _} ->
+            io_server:write(done),
+            io_server:ask();
+        {too_low, _} ->
+            io_server:write(low),
             play();
-        _ ->
-            io:format("Thanks for playing!~n")
+        {too_high, _} ->
+            io_server:write(high),
+            play()
     end.
 
 guess(Guess) ->
