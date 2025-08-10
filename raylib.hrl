@@ -1,0 +1,76 @@
+% Colors
+-define(RED,   16#FFFF0000).
+-define(GREEN, 16#FF00FF00).
+-define(BLUE,  16#FF0000FF).
+-define(WHITE, 16#FFFFFFFF).
+-define(BLACK, 16#FF000000).
+
+% Keys
+-define(KEY_NULL         , 0).
+-define(KEY_APOSTROPHE   , 39).
+-define(KEY_COMMA        , 44).
+-define(KEY_MINUS        , 45).
+-define(KEY_PERIOD       , 46).
+-define(KEY_SLASH        , 47).
+-define(KEY_ZERO         , 48).
+-define(KEY_ONE          , 49).
+-define(KEY_TWO          , 50).
+-define(KEY_THREE        , 51).
+-define(KEY_FOUR         , 52).
+-define(KEY_FIVE         , 53).
+-define(KEY_SIX          , 54).
+-define(KEY_SEVEN        , 55).
+-define(KEY_EIGHT        , 56).
+-define(KEY_NINE         , 57).
+-define(KEY_SEMICOLON    , 59).
+-define(KEY_EQUAL        , 61).
+-define(KEY_A            , 65).
+-define(KEY_B            , 66).
+-define(KEY_C            , 67).
+-define(KEY_D            , 68).
+-define(KEY_E            , 69).
+-define(KEY_F            , 70).
+-define(KEY_G            , 71).
+-define(KEY_H            , 72).
+-define(KEY_I            , 73).
+-define(KEY_J            , 74).
+-define(KEY_K            , 75).
+-define(KEY_L            , 76).
+-define(KEY_M            , 77).
+-define(KEY_N            , 78).
+-define(KEY_O            , 79).
+-define(KEY_P            , 80).
+-define(KEY_Q            , 81).
+-define(KEY_R            , 82).
+-define(KEY_S            , 83).
+-define(KEY_T            , 84).
+-define(KEY_U            , 85).
+-define(KEY_V            , 86).
+-define(KEY_W            , 87).
+-define(KEY_X            , 88).
+-define(KEY_Y            , 89).
+-define(KEY_Z            , 90).
+-define(KEY_LEFT_BRACKET , 91).
+-define(KEY_BACKSLASH    , 92).
+-define(KEY_RIGHT_BRACKET, 93).
+-define(KEY_GRAVE        , 96).
+-define(KEY_SPACE        , 32).
+-define(KEY_ESCAPE       , 256).
+-define(KEY_ENTER        , 257).
+-define(KEY_TAB          , 258).
+-define(KEY_BACKSPACE    , 259).
+-define(KEY_INSERT       , 260).
+-define(KEY_DELETE       , 261).
+-define(KEY_RIGHT        , 262).
+-define(KEY_LEFT         , 263).
+-define(KEY_DOWN         , 264).
+-define(KEY_UP           , 265).
+-define(KEY_PAGE_UP      , 266).
+-define(KEY_PAGE_DOWN    , 267).
+-define(KEY_HOME         , 268).
+-define(KEY_END          , 269).
+-define(KEY_CAPS_LOCK    , 280).
+-define(KEY_SCROLL_LOCK  , 281).
+-define(KEY_NUM_LOCK     , 282).
+-define(KEY_PRINT_SCREEN , 283).
+-define(KEY_PAUSE        , 284).

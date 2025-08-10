@@ -1,0 +1,5 @@
+*.beam
+*.log
+*.dump
+*.tar.gz
+*.so

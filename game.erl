@@ -1,0 +1,74 @@
+%% game.erl
+%% this file implements the game server
+-module(game).
+-behaviour(gen_server).
+
+-export([start_link/0]).
+-export([init/1, handle_call/3, handle_cast/2]).
+-export([guess/1, new_game/0]).
+-export([play/0]).
+
+start_link() ->
+    gen_server:start_link({local, game}, game, [], [{debug, [trace, {log_to_file, "debug.log"}]}]).
+
+init(_Arg) ->
+    Target = rand:uniform(100),  % Random number 1-100
+    State = #{target => Target, guesses => 0},
+    {ok, State}.
+
+handle_call(new_game, _From, _State) ->
+    Target = rand:uniform(100),
+    NewState = #{target => Target, guesses => 0},
+    {reply, ok, NewState};
+handle_call({guess, Guess}, _From, State = #{target := Target, guesses := Count}) ->
+    NewCount = Count + 1,
+    NewState = State#{guesses => NewCount},
+    if
+        Guess == Target ->
+            io:format("Correct! You won in ~p guesses!~n", [NewCount]),
+            {reply, {correct, NewCount}, NewState};
+        Guess < Target ->
+            io:format("server: Too low! Attempt[~p]~n", [NewCount]),
+            {reply, {too_low, NewCount}, NewState};
+        true ->
+            io:format("server: Too high! Try ~p~n", [NewCount]),
+            {reply, {too_high, NewCount}, NewState}
+    end.
+
+handle_cast(_Req, State) ->
+    {noreply, State}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+play() ->
+    case io:fread("Guess a number (1-100): ", "~d") of
+        {ok, [Num]} ->
+            case game:guess(Num) of
+                {correct, Count} ->
+                    io:format("You won in ~p guesses!~n", [Count]),
+                    ask_play_again();
+                {too_low, _} ->
+                    io:format("client: Too low!~n"),
+                    play();
+                {too_high, _} ->
+                    io:format("client: Too high!~n"),
+                    play()
+            end;
+        {error, _} ->
+            io:format("Please enter a valid number~n"),
+            play()
+    end.
+
+ask_play_again() ->
+    case io:fread("Play again? (y/n): ", "~s") of
+        {ok, ["y"]} ->
+            game:new_game(),
+            play();
+        _ ->
+            io:format("Thanks for playing!~n")
+    end.
+
+guess(Guess) ->
+    gen_server:call(game, {guess, Guess}).
+
+new_game() ->
+    gen_server:call(game, new_game).
